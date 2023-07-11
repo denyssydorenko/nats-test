@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  nats:
+    image: nats
+    ports:
+      - "4222:4222"
+    networks:
+      - local
+
+  consumer:
+    build:
+      context: ../
+      dockerfile: packages/consumer/Dockerfile
+    ports:
+      - "8086:8086"
+    depends_on: ['nats']
+    networks:
+      - local
+
+  producer:
+    build:
+      context: ../
+      dockerfile: packages/producer/Dockerfile
+    ports:
+      - "8085:8085"
+    depends_on: ['consumer']
+    networks:
+      - local
+
+networks:
+  local:
